@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analisador Funcional de Logs</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="shell">
+
+        <header>
+            <div class="title-row">
+                <h1>Analisador Funcional de Logs</h1>
+            </div>
+        </header>
+
+        <!-- Controles -->
+        <div class="controls">
+            <select id="selStatus" onchange="applyAndRender()">
+                <option value="">todos os status</option>
+                <option value="2">2xx — sucesso</option>
+                <option value="3">3xx — redirecionamento</option>
+                <option value="4">4xx — erro cliente</option>
+                <option value="5">5xx — erro servidor</option>
+            </select>
+
+            <select id="selMethod" onchange="applyAndRender()">
+                <option value="">todos os métodos</option>
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="DELETE">DELETE</option>
+                <option value="PUT">PUT</option>
+            </select>
+
+            <button class="primary" onclick="regenerate()">↻ gerar novos logs</button>
+
+            <span class="count-msg" id="countMsg"></span>
+        </div>
+
+        <!-- Métricas -->
+        <div class="metrics" id="metrics"></div>
+
+        <!-- Tabela -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>Método</th>
+                        <th>Rota</th>
+                        <th>Status</th>
+                        <th>Tempo (ms)</th>
+                        <th>Hora</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- Barras -->
+        <div class="bars-grid">
+            <div class="bars-section">
+                <p class="section-label">erros por rota — filter + reduce + sort</p>
+                <div id="routeBars"></div>
+            </div>
+            <div class="bars-section">
+                <p class="section-label">top IPs — reduce + sort + slice</p>
+                <div id="ipBars"></div>
+            </div>
+        </div>
+
+    </div>
+    <script src="logs.js"></script>
+    <script src="ui.js"></script>
+</body>
+</html>

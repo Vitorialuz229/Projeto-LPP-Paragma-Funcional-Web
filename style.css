@@ -1,0 +1,339 @@
+ *,
+ *::before,
+ *::after {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+ }
+
+ :root {
+     --bg: #0d0f12;
+     --surface: #151820;
+     --border: rgba(255, 255, 255, 0.07);
+     --text: #e8eaf0;
+     --muted: #606878;
+     --green: #4ade80;
+     --red: #f87171;
+     --yellow: #fbbf24;
+     --blue: #60a5fa;
+     --purple: #a78bfa;
+     --mono: 'IBM Plex Mono', monospace;
+     --sans: 'IBM Plex Sans', sans-serif;
+ }
+
+ body {
+     font-family: var(--sans);
+     background: var(--bg);
+     color: var(--text);
+     min-height: 100vh;
+     font-size: 14px;
+     line-height: 1.6;
+ }
+
+ /* ── Layout ── */
+ .shell {
+     max-width: 960px;
+     margin: 0 auto;
+     padding: 2.5rem 1.5rem 5rem;
+ }
+
+ /* ── Header ── */
+ header {
+     margin-bottom: 2.5rem;
+     padding-bottom: 1.5rem;
+     border-bottom: 1px solid var(--border);
+ }
+
+ .title-row {
+     display: flex;
+     align-items: baseline;
+     gap: 12px;
+     flex-wrap: wrap;
+     margin-bottom: 6px;
+ }
+
+ h1 {
+     font-size: 20px;
+     font-weight: 500;
+     letter-spacing: -0.02em;
+     color: #fff;
+ }
+
+ .subtitle {
+     font-size: 12px;
+     color: var(--muted);
+     font-family: var(--mono);
+ }
+
+ .rules {
+     display: flex;
+     gap: 8px;
+     flex-wrap: wrap;
+     margin-top: 12px;
+ }
+
+ .rule {
+     font-family: var(--mono);
+     font-size: 11px;
+     padding: 3px 10px;
+     border-radius: 4px;
+     border: 1px solid;
+ }
+
+ .rule-ok {
+     color: var(--green);
+     border-color: rgba(74, 222, 128, 0.25);
+     background: rgba(74, 222, 128, 0.06);
+ }
+
+ .rule-no {
+     color: var(--red);
+     border-color: rgba(248, 113, 113, 0.25);
+     background: rgba(248, 113, 113, 0.06);
+ }
+
+ /* ── Controls ── */
+ .controls {
+     display: flex;
+     gap: 8px;
+     flex-wrap: wrap;
+     align-items: center;
+     margin-bottom: 1.5rem;
+ }
+
+ select,
+ button {
+     font-family: var(--mono);
+     font-size: 12px;
+     border-radius: 6px;
+     border: 1px solid var(--border);
+     background: var(--surface);
+     color: var(--text);
+     padding: 7px 12px;
+     cursor: pointer;
+     transition: border-color 0.15s;
+     appearance: none;
+ }
+
+ select:hover,
+ button:hover {
+     border-color: rgba(255, 255, 255, 0.2);
+ }
+
+ select:focus,
+ button:focus {
+     outline: none;
+     border-color: var(--blue);
+ }
+
+ button.primary {
+     background: rgba(96, 165, 250, 0.12);
+     border-color: rgba(96, 165, 250, 0.3);
+     color: var(--blue);
+ }
+
+ button.primary:hover {
+     background: rgba(96, 165, 250, 0.2);
+ }
+
+ .count-msg {
+     font-family: var(--mono);
+     font-size: 11px;
+     color: var(--muted);
+     margin-left: auto;
+ }
+
+ /* ── Metrics ── */
+ .metrics {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+     gap: 10px;
+     margin-bottom: 2rem;
+ }
+
+ .metric {
+     background: var(--surface);
+     border: 1px solid var(--border);
+     border-radius: 8px;
+     padding: 14px 16px;
+ }
+
+ .metric-label {
+     font-size: 11px;
+     color: var(--muted);
+     font-family: var(--mono);
+     margin-bottom: 6px;
+ }
+
+ .metric-value {
+     font-size: 28px;
+     font-weight: 300;
+     letter-spacing: -0.03em;
+     line-height: 1;
+ }
+
+ .metric-fn {
+     font-family: var(--mono);
+     font-size: 10px;
+     color: var(--muted);
+     margin-top: 6px;
+ }
+
+ .c-green {
+     color: var(--green);
+ }
+
+ .c-red {
+     color: var(--red);
+ }
+
+ .c-blue {
+     color: var(--blue);
+ }
+
+ .c-yellow {
+     color: var(--yellow);
+ }
+
+ .c-text {
+     color: var(--text);
+ }
+
+ /* ── Table ── */
+ .table-wrap {
+     overflow-x: auto;
+     margin-bottom: 2rem;
+ }
+
+ table {
+     width: 100%;
+     border-collapse: collapse;
+     font-size: 12.5px;
+     font-family: var(--mono);
+ }
+
+ th {
+     text-align: left;
+     padding: 8px 12px;
+     color: var(--muted);
+     font-size: 11px;
+     border-bottom: 1px solid var(--border);
+     font-weight: 400;
+     white-space: nowrap;
+ }
+
+ td {
+     padding: 7px 12px;
+     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     max-width: 180px;
+ }
+
+ tr:last-child td {
+     border-bottom: none;
+ }
+
+ tr:hover td {
+     background: rgba(255, 255, 255, 0.02);
+ }
+
+ .badge {
+     display: inline-block;
+     padding: 2px 8px;
+     border-radius: 4px;
+     font-size: 11px;
+ }
+
+ .s2xx {
+     background: rgba(74, 222, 128, 0.1);
+     color: var(--green);
+ }
+
+ .s3xx {
+     background: rgba(96, 165, 250, 0.1);
+     color: var(--blue);
+ }
+
+ .s4xx {
+     background: rgba(251, 191, 36, 0.1);
+     color: var(--yellow);
+ }
+
+ .s5xx {
+     background: rgba(248, 113, 113, 0.1);
+     color: var(--red);
+ }
+
+ /* ── Barras ── */
+ .section-label {
+     font-family: var(--mono);
+     font-size: 11px;
+     color: var(--muted);
+     text-transform: uppercase;
+     letter-spacing: 0.08em;
+     margin: 0 0 10px;
+ }
+
+ .bars-grid {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 1.5rem;
+     margin-bottom: 2rem;
+ }
+
+ @media (max-width: 600px) {
+     .bars-grid {
+         grid-template-columns: 1fr;
+     }
+ }
+
+ .bars-section {
+     background: var(--surface);
+     border: 1px solid var(--border);
+     border-radius: 8px;
+     padding: 1rem 1.25rem;
+ }
+
+ .bar-row {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     margin-bottom: 8px;
+     font-family: var(--mono);
+     font-size: 11px;
+ }
+
+ .bar-row:last-child {
+     margin-bottom: 0;
+ }
+
+ .bar-lbl {
+     width: 110px;
+     min-width: 110px;
+     color: var(--muted);
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+ }
+
+ .bar-track {
+     flex: 1;
+     height: 6px;
+     background: rgba(255, 255, 255, 0.06);
+     border-radius: 3px;
+     overflow: hidden;
+ }
+
+ .bar-fill {
+     height: 100%;
+     border-radius: 3px;
+     transition: width 0.35s cubic-bezier(.4, 0, .2, 1);
+ }
+
+ .bar-val {
+     color: var(--text);
+     min-width: 28px;
+     text-align: right;
+ }

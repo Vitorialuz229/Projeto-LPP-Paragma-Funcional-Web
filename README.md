@@ -84,8 +84,8 @@ open index.html  # macOS
 
 ## Integrantes
 
-| Nome | Responsabilidade |
-|------|-----------------|
+| Nome
+|------|
 | Bruno Milioli Ferreira | 
 | Cristina dos Santos Gomes | 
 | Gabriel Borges Garcia | 

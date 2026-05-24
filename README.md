@@ -86,8 +86,8 @@ open index.html  # macOS
 
 | Nome | Responsabilidade |
 |------|-----------------|
-| Bruno Milioli Ferreira | — |
-| Cristina dos Santos Gomes | — |
-| Gabriel Borges Garcia | — |
-| Raquel Dias da Silva | — |
-| Vitória Luz Alves D'Abadia | — |
+| Bruno Milioli Ferreira | 
+| Cristina dos Santos Gomes | 
+| Gabriel Borges Garcia | 
+| Raquel Dias da Silva | 
+| Vitória Luz Alves D'Abadia | 

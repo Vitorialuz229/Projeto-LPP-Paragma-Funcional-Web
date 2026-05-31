@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testes de Estresse — Analisador Funcional de Logs</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Estilos específicos da página de testes de estresse */
+        .test-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-card h2 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-card p.desc {
+            font-size: 12.5px;
+            color: var(--muted);
+            margin-bottom: 12px;
+            line-height: 1.55;
+        }
+
+        .test-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .badge.pending {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            font-family: var(--mono);
+        }
+
+        .badge.running {
+            background: rgba(96, 165, 250, 0.12);
+            color: var(--blue);
+            font-family: var(--mono);
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        .badge.ok {
+            background: rgba(74, 222, 128, 0.12);
+            color: var(--green);
+            font-family: var(--mono);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .result-table {
+            margin-top: 10px;
+        }
+
+        .result-table th {
+            font-size: 11px;
+        }
+
+        .result-table td {
+            font-size: 12px;
+        }
+
+        .ok { color: var(--green); }
+        .err { color: var(--red); }
+
+        h3 {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text);
+            margin: 16px 0 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        #console {
+            background: #08090c;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: var(--mono);
+            font-size: 11.5px;
+            max-height: 260px;
+            overflow-y: auto;
+            margin-top: 2rem;
+        }
+
+        .log-line {
+            color: var(--muted);
+            margin-bottom: 2px;
+            white-space: pre-wrap;
+        }
+
+        .log-line.ok { color: var(--green); }
+        .log-line.err { color: var(--red); }
+
+        .back-link {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            text-decoration: none;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .back-link:hover { color: var(--blue); }
+
+        .warn-box {
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--yellow);
+            margin-bottom: 1.5rem;
+            font-family: var(--mono);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+
+        <a href="index.html" class="back-link">← voltar para a demo principal</a>
+
+        <header>
+            <div class="title-row">
+                <h1>Testes de Estresse do Pipeline Funcional</h1>
+            </div>
+            <p class="subtitle">volume · pressão de memória · condição de corrida · comparação funcional × imperativo</p>
+        </header>
+
+        <div class="warn-box">
+            ⚠ <strong>SharedArrayBuffer</strong> exige <em>cross-origin isolation</em> (headers COOP/COEP).
+            O <code>python3 -m http.server</code> puro NÃO envia esses headers.
+            <br>Use o servidor incluso no projeto:
+            <br><code>python3 serve.py</code>
+            <br>Depois abra <code>http://localhost:8000/stress-test.html</code>.
+            <br>Sem isso, o teste 2 (cenário B — condição de corrida) será pulado, mas os demais funcionam.
+        </div>
+
+        <!-- 1. Volume -->
+        <div class="test-card">
+            <h2>1. Volume e Pressão de Memória
+                <span id="statusVolume" class="badge pending">pendente</span>
+            </h2>
+            <p class="desc">
+                Executa <code>analyze(generateLogs(N))</code> com N crescendo de 10 mil a 2 milhões de logs.
+                Mede tempo de execução e variação do heap, capturando <code>RangeError</code> ou OOM se houver.
+                Demonstra o custo de memória do spread em <code>reduce</code> e o limite prático imposto pelo GC.
+            </p>
+            <div class="test-actions">
+                <button class="primary" onclick="runVolumeTest()">▶ executar</button>
+            </div>
+            <div id="resultVolume"></div>
+        </div>
+
+        <!-- 2. Race condition -->
+        <div class="test-card">
+            <h2>2. Condição de Corrida com Web Workers
+                <span id="statusRace" class="badge pending">pendente</span>
+            </h2>
+            <p class="desc">
+                Despacha 8 workers em paralelo sobre o mesmo array imutável de 100 mil logs.
+                <strong>Cenário A</strong>: pipeline funcional puro — todos retornam resultados idênticos
+                (paralelização trivialmente segura).
+                <strong>Cenário B</strong>: contador imperativo em <code>SharedArrayBuffer</code> sem
+                <code>Atomics</code> — corrida real, valores divergem entre execuções.
+                <strong>Cenário C</strong>: mesmo contador com <code>Atomics.add</code> — corrigido, mas
+                exige primitiva explícita.
+            </p>
+            <div class="test-actions">
+                <button class="primary" onclick="runRaceConditionTest()">▶ executar</button>
+            </div>
+            <div id="resultRace"></div>
+        </div>
+
+        <!-- 3. Comparison -->
+        <div class="test-card">
+            <h2>3. Comparação Empírica: Funcional × Imperativo
+                <span id="statusComp" class="badge pending">pendente</span>
+            </h2>
+            <p class="desc">
+                Roda <code>analyze</code> funcional e <code>imperativeAnalyze</code> sobre o mesmo dataset
+                de 500 mil logs, 10 vezes cada (média truncada), comparando tempo médio e correção
+                dos resultados. Mostra honestamente o trade-off: imperativo é mais rápido em throughput puro;
+                funcional ganha em segurança, paralelização e legibilidade.
+            </p>
+            <div class="test-actions">
+                <button class="primary" onclick="runComparisonTest()">▶ executar</button>
+            </div>
+            <div id="resultComp"></div>
+        </div>
+
+        <!-- 4. Immutability -->
+        <div class="test-card">
+            <h2>4. Imutabilidade e Transparência Referencial sob Estresse
+                <span id="statusImmut" class="badge pending">pendente</span>
+            </h2>
+            <p class="desc">
+                Tenta mutar cada campo de um log congelado em <code>strict mode</code> — todas as tentativas
+                devem lançar <code>TypeError</code> ou ser silenciosamente ignoradas. Em seguida, executa
+                <code>analyze(logs)</code> 10.000 vezes e confirma que todos os outputs são byte-a-byte
+                idênticos (transparência referencial em massa).
+            </p>
+            <div class="test-actions">
+                <button class="primary" onclick="runImmutabilityTest()">▶ executar</button>
+            </div>
+            <div id="resultImmut"></div>
+        </div>
+
+        <!-- Console -->
+        <h3>console de execução</h3>
+        <div id="console"></div>
+
+    </div>
+
+    <script src="logs.js"></script>
+    <script src="imperative.js"></script>
+    <script src="stress.js"></script>
+</body>
+
+</html>
